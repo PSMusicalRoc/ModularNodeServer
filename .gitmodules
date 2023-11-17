@@ -1,0 +1,3 @@
+[submodule "ServerModules/rpi-top8er"]
+	path = ServerModules/rpi-top8er
+	url = https://github.com/PSMusicalRoc/rpi-top8er.git
