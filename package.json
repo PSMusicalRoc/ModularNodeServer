@@ -1,5 +1,19 @@
 {
   "dependencies": {
-    "@inquirer/prompts": "^3.3.0"
-  }
+    "@inquirer/prompts": "^3.3.0",
+    "aboutme": "file:ServerModules/aboutme",
+    "express": "^4.18.2",
+    "helloworld-modular": "file:ServerModules/helloworld",
+    "top8er": "file:ServerModules/rpi-top8er"
+  },
+  "name": "roc-modular-server",
+  "description": "A modular server structure relying on Git submodules",
+  "version": "1.0.0",
+  "exports": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DumbAsARoc",
+  "type": "module",
+  "license": "ISC"
 }
