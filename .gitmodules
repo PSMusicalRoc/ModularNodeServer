@@ -4,3 +4,5 @@
 [submodule "ServerModules/aboutme"]
 	path = ServerModules/aboutme
 	url = https://github.com/PSMusicalRoc/aboutme.git
+[submodule "ServerModules/rpi-top8er/"]
+	branch = main
