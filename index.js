@@ -7,6 +7,12 @@ enable      Takes a comma separated list of modules and mountpoints to
             spaces in the name, use quotes. Do NOT
             separate the comma separated list with spaces!
             Example: enable=helloworld:/hi,test:/mountpoint
+
+default     Specifies the default "root" module for the server.
+            When the user goes to "server.com/", they will go
+            to whatever is defined here. If not defined, the
+            first module enabled will be the root. If no modules
+            are enabled at startup, the root will simply not exist.
 `
 
 // Server Flags
@@ -30,6 +36,7 @@ let port = 0;
  */
 let currentlyEnabled = [];
 let enable = [];
+let defaultRoot = null;
 
 // End Server Options
 
@@ -68,6 +75,9 @@ async function enableServerModule(moduleName, serverPath) {
             serverPath: serverPath,
             module: serverModule.default
           });
+          if (defaultRoot == null) {
+            defaultRoot = serverPath;
+          }
           resolve(`Successfully loaded and enabled ${moduleName} at path ${serverPath}!`);
         })
         .catch((reason) => {
@@ -128,6 +138,9 @@ for (const arg of argv.options) {
   if (arg.key === "enable") {
     enable = arg.value.split(",");
   }
+  if (arg.key === "default") {
+    defaultRoot = arg.value;
+  }
 }
 
 if (port === 0) {
@@ -147,6 +160,33 @@ for (const newmodule of enable) {
     console.log(`Module loading error: ${err}`);
   }
 }
+
+let defaultRootParsing = await new Promise((res, rej) => {
+  if (defaultRoot != null) {
+    for (const module of currentlyEnabled) {
+      if (module.moduleName === defaultRoot) {
+        res(module.serverPath);
+      }
+    }
+  }
+  res(null);
+});
+
+if (defaultRootParsing == null && currentlyEnabled.length > 0) {
+  const module = currentlyEnabled[0];
+  defaultRootParsing = module.serverPath;
+}
+
+defaultRoot = defaultRootParsing;
+
+app.get("/", (req, res) => {
+  if (defaultRoot == null) {
+    res.sendStatus(404);
+  }
+  else {
+    res.redirect(defaultRoot);
+  }
+});
 
 // Inquirer Prompts
 
